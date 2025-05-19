@@ -5,15 +5,28 @@ import bcrypt from 'bcryptjs'
 
 describe('UserService', () => {
     it('should hash user password upon registration', async () => {
-        const userService = new UserService(new UserRepository())
-        const password = '123456'
-        const user = await userService.execute({
-            name: 'John Doe',
-            email: 'cesar.chauchuty766@gmail.com',
-            password,
+        const userService = new UserService({
+            async create(_) {
+                return {
+                    id: 'user-01',
+                    name: 'test',
+                    email: 'test@test.com',
+                    passwordHash: await bcrypt.hash('123456', 6),
+                    createdAt: new Date(),
+                }
+            },
+            async findByEmail(_) {
+                return null
+            }
         })
 
-        const isPasswordCorrectlyHashed = await bcrypt.compare(password, user.passwordHash)
+        const user = await userService.execute({
+            name: 'test',
+            email: 'test@test.com',
+            password: '123456',
+        })
+
+        const isPasswordCorrectlyHashed = await bcrypt.compare('123456', user.passwordHash)
 
         expect(isPasswordCorrectlyHashed).toBe(true)
     })
