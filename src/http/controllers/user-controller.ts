@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
-import { UserService } from "../services/user-service"
+import { UserService } from "../../services/user-service"
 import { UserRepository } from "@/repositories/user-repository"
 import { UserAlreadyExists } from "@/errors/user-already-exists"
 
