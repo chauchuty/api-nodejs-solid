@@ -16,7 +16,7 @@ export class UserService {
 
     async execute({
         name, email, password
-    }: User) {
+    }: { name: string, email: string, password: string }) {
         const passwordHash = await hash(password, 6)
 
         const userWithSameEmail = await this.userRepository.findByEmail(email)

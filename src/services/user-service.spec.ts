@@ -1,33 +1,56 @@
-import { UserRepository } from '@/repositories/user-repository'
 import { expect, describe, it } from 'vitest'
 import { UserService } from './user-service'
 import bcrypt from 'bcryptjs'
+import { InMemoryUserRepository } from '@/repositories/in-memory-users.repository'
 
 describe('UserService', () => {
-    it('should hash user password upon registration', async () => {
-        const userService = new UserService({
-            async create(_) {
-                return {
-                    id: 'user-01',
-                    name: 'test',
-                    email: 'test@test.com',
-                    passwordHash: await bcrypt.hash('123456', 6),
-                    createdAt: new Date(),
-                }
-            },
-            async findByEmail(_) {
-                return null
-            }
-        })
 
-        const user = await userService.execute({
+    it('should be able to register', async () => {
+        const userRepository = new InMemoryUserRepository()
+        const registerUseCase = new UserService(userRepository)
+
+        const user = await registerUseCase.execute({
             name: 'test',
-            email: 'test@test.com',
+            email: 'teste@gmail.com',
             password: '123456',
         })
+        expect(user.id).toEqual(expect.any(String))
+    })
+
+    it('should hash user password upon registration', async () => {
+        const userRepository = new InMemoryUserRepository()
+        const registerUseCase = new UserService(userRepository)
+
+        const user = await registerUseCase.execute({
+            name: 'test',
+            email: 'teste@gmail.com',
+            password: '123456',
+        })
+
 
         const isPasswordCorrectlyHashed = await bcrypt.compare('123456', user.passwordHash)
 
         expect(isPasswordCorrectlyHashed).toBe(true)
+    })
+
+    it('should not be able to register with same email twice', async () => {
+        const userRepository = new InMemoryUserRepository()
+        const registerUseCase = new UserService(userRepository)
+
+        const email = 'teste@gmail.com'
+
+        const user = await registerUseCase.execute({
+            name: 'test',
+            email,
+            password: '123456',
+        })
+
+        expect(async () => {
+            await registerUseCase.execute({
+                name: 'test',
+                email,
+                password: '123456',
+            })
+        }).rejects.toBeInstanceOf(Error)
     })
 })

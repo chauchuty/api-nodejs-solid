@@ -7,8 +7,10 @@
     "start:dev": "tsx watch .",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
-    "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test": "vitest run **/*.spec.ts",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest ui src/**/*.spec.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +19,10 @@
   "devDependencies": {
     "@eslint/js": "9.26.0",
     "@types/node": "22.15.18",
+    "@vitest/coverage-v8": "3.1.4",
     "eslint": "9.26.0",
     "globals": "16.1.0",
+    "jsdom": "26.1.0",
     "prisma": "6.8.2",
     "tsup": "8.4.0",
     "tsx": "4.19.4",
@@ -30,6 +34,7 @@
   "dependencies": {
     "@prisma/client": "6.8.2",
     "@types/bcryptjs": "2.4.6",
+    "@vitest/ui": "3.1.4",
     "bcryptjs": "3.0.2",
     "dotenv": "16.5.0",
     "fastify": "5.3.3",
