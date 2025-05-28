@@ -2,7 +2,7 @@ import { UserAlreadyExists } from "@/errors/user-already-exists"
 import { UserRepository } from "@/repositories/user-repository"
 import { hash } from "bcryptjs"
 
-interface User {
+export interface User {
     name: string,
     email: string,
     password: string
